@@ -3,6 +3,8 @@ const morgan = require('morgan');
 const cors = require('cors');
 const path = require('path');
 
+const apiRoutes = require('./routes')
+
 const server = express();
 
 
@@ -15,7 +17,11 @@ server.use(express.urlencoded({ extended: false }));
 server.use(morgan('dev'));
 server.use(cors());
 
+
 //ROUTES
+// server.use('/api/movie', apiRoutes.movie)
+// server.use('/api/serial', apiRoutes.serial)
+// server.use('/api/user', apiRoutes.user)
 
 
 
