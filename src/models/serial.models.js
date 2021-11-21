@@ -24,7 +24,7 @@ const serialSchema = new Schema({
     },
 
     image: {
-        type: File,
+        type: String,
         required: true,
     },
 

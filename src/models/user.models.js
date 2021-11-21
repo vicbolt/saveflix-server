@@ -13,16 +13,14 @@ const userSchema = new Schema({
         required: true,
     },
 
-    username: {
-        type: String,
-        required: true,
-        unique: true
-    },
+    // username: {
+    //     type: String,
+    //     unique: true
+    // },
 
-    avatar: {
-        type: File,
-        required: true,
-    },
+    // avatar: {
+    //     type: String,
+    // },
 
 
 },{

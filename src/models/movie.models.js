@@ -24,7 +24,7 @@ const movieSchema = new Schema({
     },
 
     image: {
-        type: File,
+        type: String,
         required: true,
     },
 

@@ -13,12 +13,7 @@ const commentSchema = new Schema({
         required: true,
     },
 
-    moviePost: {
-        type: Schema.Types.ObjectId,
-        ref: 'Movie',
-    },
-
-    serialPost: {
+    post: {
         type: Schema.Types.ObjectId,
         ref: 'Serial'
     }
