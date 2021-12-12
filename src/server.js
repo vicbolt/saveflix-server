@@ -9,7 +9,7 @@ const server = express();
 
 
 //SETTINGS
-server.set('PORT', 4500);
+server.set('PORT', process.env.PORT ?? 4500);
 
 //MIDDLEWARES
 server.use(express.json());
