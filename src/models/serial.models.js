@@ -5,7 +5,6 @@ const serialSchema = new Schema({
     title: {
         type: String,
         required: true,
-        unique: true
     },
 
     director: {
@@ -21,6 +20,7 @@ const serialSchema = new Schema({
     score: {
         type: Number,
         required: true,
+        default: "0"
     },
 
     image: {
@@ -28,11 +28,17 @@ const serialSchema = new Schema({
         required: true,
     },
 
-    owner: {
-        type: String,
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
         required: true
     },
 
+    post: {
+        type: String,
+        required: true,
+    },
+    
     likes: {
         type: Number,
         default: '0',
@@ -40,7 +46,7 @@ const serialSchema = new Schema({
 
     views: {
         type: Number,
-        default: '0',
+        default: '1',
     }
 
 },{

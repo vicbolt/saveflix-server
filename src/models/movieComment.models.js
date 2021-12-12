@@ -16,12 +16,8 @@ const commentSchema = new Schema({
     post: {
         type: Schema.Types.ObjectId,
         ref: 'Movie',
+        required: true
     },
-
-    serialPost: {
-        type: Schema.Types.ObjectId,
-        ref: 'Serial'
-    }
 
 },{
     timestamps: true,

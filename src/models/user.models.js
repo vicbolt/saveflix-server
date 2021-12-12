@@ -13,15 +13,21 @@ const userSchema = new Schema({
         required: true,
     },
 
-    // username: {
-    //     type: String,
-    //     unique: true
-    // },
+    username: {
+        type: String,
+        required: true,
+        unique: true
+    },
 
-    // avatar: {
-    //     type: String,
-    // },
+    avatar: {
+        type: String,
+        required: true,
+    },
 
+    following: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }]
 
 },{
     timestamps: true,

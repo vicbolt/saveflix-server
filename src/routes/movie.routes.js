@@ -1,17 +1,50 @@
 const { Router } = require('express');
-const router = Router();
 
 const controllers = require('../controllers')
 
+const config = require('../config')
 
-router.post('/create', controllers.movie.create)
+const multer = require('multer')
 
-router.get('/getAll', controllers.movie.getAll)
+const storage = multer.diskStorage({
+    destination: function(req,file,cb){
+        cb(null, config.imageFolder)
+    },
+    filename: function(req, file, cb){
+        cb(null, Date.now() + '.jpg')
+    }
+})
+
+const uploads = multer({
+    storage: storage,
+    limits: {
+        // fileSize: 20000000000,
+    }
+})
+
+const router = Router();
+
+router.post('/create', uploads.single('image'), controllers.movie.create)
+
+router.get('/getAll/:id', controllers.movie.getAll)
+
+router.get('/explorar', controllers.movie.explorar)
+
+router.get('/getOne/:id', controllers.movie.getOne)
+
+router.get('/postRecientes', controllers.movie.postRecientes)
 
 router.put('/update/:id', controllers.movie.update)
 
+router.post('/likes', controllers.movie.likes)
+
+router.post('/views', controllers.movie.views)
+
 router.delete('/remove/:id', controllers.movie.remove)
 
+router.get('/stats', controllers.movie.stats)
+
+router.post('/duplicate', controllers.movie.duplicate)
 
 
 module.exports = router

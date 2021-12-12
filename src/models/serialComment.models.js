@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose')
 
-const commentSchema = new Schema({
+const serialCommentSchema = new Schema({
 
     message: {
         type: String,
@@ -15,8 +15,9 @@ const commentSchema = new Schema({
 
     post: {
         type: Schema.Types.ObjectId,
-        ref: 'Serial'
-    }
+        ref: 'Serial',
+        required: true
+    },
 
 },{
     timestamps: true,
@@ -24,4 +25,4 @@ const commentSchema = new Schema({
 })
 
 
-module.exports = model('Comment', commentSchema)
+module.exports = model('SerialComment', serialCommentSchema)
