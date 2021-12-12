@@ -18,12 +18,18 @@ server.use(morgan('dev'));
 server.use(cors());
 
 
+
 //ROUTES
 server.use('/api/user', routes.user)
 server.use('/api/movie', routes.movie)
 server.use('/api/serial', routes.serial)
 server.use('/api/movieComment', routes.movieComment)
 server.use('/api/serialComment', routes.serialComment)
+
+
+server.get("/", (req,res) => {
+   return res.json({ msg: "bienvenido"})
+})
 
 
 
