@@ -27,6 +27,8 @@ const router = Router();
 
 router.post('/create', uploads.single('image'), controllers.serial.create)
 
+router.post('/duplicate', controllers.serial.duplicate)
+
 router.get('/getAll/:id', controllers.serial.getAll)
 
 router.get('/explorar', controllers.serial.explorar)

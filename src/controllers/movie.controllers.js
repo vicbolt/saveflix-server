@@ -35,7 +35,7 @@ const create = async (req,res) => {
 
 const duplicate = async (req,res) => {
     try{
-        const { title, director, description, score, userId } = req.body;
+        const { title, director, description, score, userId, image } = req.body;
 
 
         const user = await models.user.findById(userId)
@@ -162,6 +162,7 @@ const update = async (req,res) => {
         const { title, director, description, score, image, owner } = req.body;
 
         const movie = await models.movie.findById(id)
+
         movie.title = title
         movie.director = director
         movie.description = description

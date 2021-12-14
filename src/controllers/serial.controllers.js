@@ -32,6 +32,33 @@ const create = async (req,res) => {
     }
 }
 
+const duplicate = async (req,res) => {
+    try{
+        const { title, director, description, score, userId, image } = req.body;
+
+
+        const user = await models.user.findById(userId)
+        if(!user){
+            return res.status(400).json({error: 'El usuario no existe'})
+        }
+
+        const serial = await models.serial.create({
+            title,
+            director, 
+            description, 
+            score, 
+            image,
+            user,
+            post: "serial"
+        })
+
+        return res.status(200).json({ serial })
+
+    }catch(error){
+        return res.status(500).json({error: 'No se ha podido crear la publicación'})
+    }
+}
+
 const getAll = async (req,res) => {
     
     try{
@@ -128,25 +155,25 @@ const views = async (req, res) => {
 const update = async (req,res) => {
     try{
 
-        const { id } = req.params
-        const { title, director, description, score, image, owner, likes, views } = req.body;
+        const {id} = req.params
+        const { title, director, description, score, image, owner } = req.body;
 
         const serial = await models.serial.findById(id)
+
         serial.title = title
         serial.director = director
         serial.description = description
         serial.score = score
         serial.image = image
         serial.owner = owner
-        serial.likes = likes
-        serial.views = views
 
         await serial.save()
 
-        return res.status(200).json({ serial })
+        return res.status(200).json({serial})
+        
 
-    } catch(error) {
-        return res.status(500).json({ error: 'No ha sido posible actualizar la película' })
+    } catch(error){
+        return res.status(500).json({error: 'No ha sido posible actualizar la serie'})
     }
 }
 
@@ -180,6 +207,7 @@ const stats = async(req, res) => {
 
 module.exports = {
     create,
+    duplicate,
     getAll,
     explorar,
     getOne,

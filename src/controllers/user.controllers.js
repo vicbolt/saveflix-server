@@ -33,12 +33,14 @@ const signUp = async (req,res) => {
 
         const mayusUsername = username.toUpperCase()
 
+        const minusEmail = email.toLowerCase()
+
         const file = req.file
         const hostname = config.hostname
         
         const user = { 
             avatar: hostname + file.filename,
-            email, 
+            email: minusEmail,
             username: mayusUsername,
             password: hash
         }
@@ -193,41 +195,116 @@ const following = async (req,res) => {
 
 //ACTUALIZAR UN USUARIO
 
-const update = async (req, res) => {
+const saveEmail = async (req, res) => {
     try{
         const { id } = req.params
-        const { email, username, password } = req.body
+        const {email} = req.body
+
+        const user = await models.user.findById(id)
+
+        const minusEmail = email.toLowerCase()
+        
+        if(!email){
+            return res.status(400).json({error: 'Email debe estar relleno'})
+
+        } else if(minusEmail === user.email){
+            await user.update({email: user.email })
+
+        } else {
+            const emailExists = await models.user.findOne({email: minusEmail})
+            if(emailExists){
+                return res.status(400).json({ error: 'El email ya ha sido registrado anteriormente'})
+            } else{
+                await user.update({email: minusEmail})
+            }
+        }
+
+        return res.status(200).json({user})
+
+    } catch(error){
+        return res.status(500).json({ error: 'No ha sido posible actualizar los datos del usuario'})
+    }
+    
+}
+
+const saveUsername = async (req, res) => {
+    try{
+        const { id } = req.params
+        const {username} = req.body
 
         const mayusUsername = username.toUpperCase()
-        const mayusEmail = email.toUpperCase()
 
         const user = await models.user.findById(id)
         
+        //USERNAME
         if(!username){
-            user.username = user.username
+            return res.status(400).json({error: 'Nombre de usuario debe estar relleno'})
+
+        } else if(mayusUsername === user.username){
+            await user.update({username: user.username })
         } else {
             const usernameExists = await models.user.findOne({username: mayusUsername})
             if(usernameExists){
                 return res.status(400).json({ error: 'El nombre de usuario no está disponible'})
+            } else {
+                await user.update({username: mayusUsername })
             }
         }
 
-        if(user.email === email|| !email){
-            user.email = user.email
-        } else {
-            const emailExists = await models.user.findOne({email})
-            if(emailExists){
-                return res.status(400).json({ error: 'El email ya ha sido registrado anteriormente'})
-            }
-        }
+        return res.status(200).json({user})
+
+    } catch(error){
+        return res.status(500).json({ error: 'No ha sido posible actualizar los datos del usuario'})
+    }
+    
+}
+
+const savePassword = async (req, res) => {
+    try{
+        const { id } = req.params
+        const {password, newPassword, newPassword2} = req.body
+
+        const user = await models.user.findById(id)
+        
 
         if(!password){
-            user.password = user.password
-        } else {
-            user.password = await helpers.bcrypt.encrypt(password)
+            return res.status(400).json({error: 'Debe elegir una contraseña'})
+        }
+        
+        const isValid = await helpers.bcrypt.compare(password, user.password)
+
+        if(!isValid){
+            return res.status(400).json({error: 'La contraseña actual no coincide'})
         }
 
-        await user.update({email, username: mayusUsername, password })
+        if(newPassword === newPassword2){
+            const hash = await helpers.bcrypt.encrypt(newPassword)
+            await user.update({password: hash })
+        }
+
+        return res.status(200).json({user})
+
+    } catch(error){
+        return res.status(500).json({ error: 'No ha sido posible actualizar los datos del usuario'})
+    }
+    
+}
+
+const saveAvatar = async (req, res) => {
+    try{
+        const { id } = req.params
+        const {avatar} = req.file
+
+        const user = await models.user.findById(id)
+
+        if(!avatar){
+            return res.status(400).json('El avatar está vacío, elija uno para continuar')
+        }
+
+        const newAvatar = hostname + file.filename
+
+        await user.update({avatar: newAvatar })
+
         return res.status(200).json({user})
 
     } catch(error){
@@ -257,7 +334,10 @@ module.exports = {
     login,
     getAll,
     getOne,
-    update,
+    saveEmail,
+    savePassword,
+    saveAvatar,
+    saveUsername,
     remove,
     follow,
     followers,

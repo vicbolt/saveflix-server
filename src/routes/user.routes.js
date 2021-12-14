@@ -36,7 +36,10 @@ router.get('/following/:id', controllers.user.following)
 
 router.get('/getOne/:id', controllers.user.getOne)
 
-router.put('/update/:id', controllers.user.update)
+router.put('/saveEmail/:id', controllers.user.saveEmail)
+router.put('/saveUsername/:id', controllers.user.saveUsername)
+router.put('/savePassword/:id', controllers.user.savePassword)
+router.put('/saveAvatar/:id', uploads.single('avatar'), controllers.user.saveAvatar)
 
 router.post('/follow', controllers.user.follow)
 

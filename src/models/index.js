@@ -3,6 +3,8 @@ const serial = require('./serial.models')
 const user = require('./user.models')
 const movieComment = require('./movieComment.models')
 const serialComment = require('./serialComment.models')
+const moviePendiente = require('./moviePendiente.models')
+const serialPendiente = require('./serialPendiente.models')
 
 module.exports = {
     movie,
@@ -10,4 +12,6 @@ module.exports = {
     user,
     movieComment,
     serialComment,
+    moviePendiente,
+    serialPendiente,
 }
