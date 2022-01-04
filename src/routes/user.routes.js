@@ -28,6 +28,10 @@ router.post('/login', controllers.user.login)
 
 router.post('/signup', uploads.single('avatar'), controllers.user.signUp)
 
+router.post('/activateCode', controllers.user.activarCodigo)
+
+router.post('/reactivateCode', controllers.user.reactivarCodigo)
+
 router.get('/getAll', controllers.user.getAll)
 
 router.get('/followers/:id', controllers.user.followers)

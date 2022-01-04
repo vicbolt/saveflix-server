@@ -19,8 +19,7 @@ const create = async (req,res) => {
             title,
             director,
             image: filename,
-            user,
-            userId: userId,
+            userId: user,
             post: "movie"
         })
 
@@ -33,9 +32,11 @@ const create = async (req,res) => {
 
 const getAll = async (req,res) => {
     try{
-        const {userId} = req.params
+        const {id} = req.params
 
-        const moviesPendientes = await models.moviePendiente.find({userId: userId})
+        console.log(id)
+
+        const moviesPendientes = await models.moviePendiente.find({userId: id})
 
         return res.status(200).json({moviesPendientes})
 

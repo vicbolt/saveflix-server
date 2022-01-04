@@ -21,7 +21,7 @@ const create = async (req,res) => {
             description, 
             score, 
             image: filename, 
-            user,
+            userId: user,
             post: "serial"
         })
 
@@ -48,7 +48,7 @@ const duplicate = async (req,res) => {
             description, 
             score, 
             image,
-            user,
+            userId: user,
             post: "serial"
         })
 
@@ -65,9 +65,9 @@ const getAll = async (req,res) => {
 
         const {id} = req.params
 
-        const serials = await models.serial.find({user: id}).sort({ createdAt: 'desc'})
+        const serials = await models.serial.find({userId: id}).sort({ createdAt: 'desc'})
 
-        const serialRanking = await models.serial.find({user: id}).sort({ score: 'desc'}).limit(10)
+        const serialRanking = await models.serial.find({userId: id}).sort({ score: 'desc'}).limit(10)
 
         return res.status(200).json({ serials, serialRanking })
 
@@ -93,7 +93,7 @@ const getOne = async (req, res) => {
 
         const {id} = req.params
 
-        const serial = await models.serial.findById(id).populate("user")
+        const serial = await models.serial.findById(id).populate("userId")
 
         return res.status(200).json({ serial })
 
@@ -105,12 +105,12 @@ const getOne = async (req, res) => {
 
 const postRecientes = async (req, res) => {
     try{
-        const serials = await models.serial.find().populate("user").sort({ createdAt: "desc"}).limit(2)
+        const serials = await models.serial.find().populate("userId").sort({ createdAt: "desc"}).limit(2)
 
         return res.status(200).json({ serials })
 
     } catch (error){
-        return res.status(500).json({error: 'No ha sido posible obtener las películas'})
+        return res.status(500).json({error: 'No ha sido posible obtener las series'})
     }
 }
 

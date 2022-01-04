@@ -22,7 +22,7 @@ const create = async (req,res) => {
             description, 
             score, 
             image: filename,
-            user,
+            userId: user,
             post: "movie"
         })
 
@@ -49,7 +49,7 @@ const duplicate = async (req,res) => {
             description, 
             score, 
             image,
-            user,
+            userId: user,
             post: "movie"
         })
 
@@ -65,9 +65,9 @@ const getAll = async (req,res) => {
 
         const {id} = req.params
 
-        const movies = await models.movie.find({user: id}).sort({ createdAt: "desc"})
+        const movies = await models.movie.find({userId: id}).sort({ createdAt: "desc"})
 
-        const ranking = await models.movie.find({user: id}).sort({ score: 'desc'}).limit(10)
+        const ranking = await models.movie.find({userId: id}).sort({ score: 'desc'}).limit(10)
 
         return res.status(200).json({ movies, ranking })
 
@@ -129,7 +129,7 @@ const views = async (req, res) => {
 const postRecientes = async (req, res) => {
     try{
 
-        const movies = await models.movie.find().populate("user").sort({ createdAt: "desc"}).limit(2)
+        const movies = await models.movie.find().populate("userId").sort({ createdAt: "desc"}).limit(2)
     
         return res.status(200).json({ movies })
 
@@ -144,7 +144,7 @@ const getOne = async (req, res) => {
 
         const {id} = req.params
 
-        const movie = await models.movie.findById(id).populate("user")
+        const movie = await models.movie.findById(id).populate("userId")
 
         return res.status(200).json({ movie })
 

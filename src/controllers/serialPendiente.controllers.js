@@ -19,7 +19,7 @@ const create = async (req,res) => {
             title,
             director,
             image: filename,
-            user,
+            userId: user,
             post: "serial"
         })
 
@@ -32,9 +32,11 @@ const create = async (req,res) => {
 
 const getAll = async (req,res) => {
     try{
-        const {userId} = req.params
+        const {id} = req.params
 
-        const serialsP = await models.serialPendiente.find({userId: userId})
+        console.log(id)
+
+        const serialsP = await models.serialPendiente.find({ userId: id })
 
         return res.status(200).json({serialsP})
 

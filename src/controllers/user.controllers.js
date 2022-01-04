@@ -37,13 +37,20 @@ const signUp = async (req,res) => {
 
         const file = req.file
         const hostname = config.hostname
+
+        const code = helpers.code.generate(6)
         
         const user = { 
             avatar: hostname + file.filename,
             email: minusEmail,
             username: mayusUsername,
-            password: hash
+            password: hash,
+            code: code
         }
+
+        const content = `Code: ${code}`
+
+        await helpers.mail.send(minusEmail, content, "¡Tu codigo de acceso a SaveFlix!")
 
         const data = await models.user.create(user)
 
@@ -55,6 +62,78 @@ const signUp = async (req,res) => {
     }
 }
 
+//VALIDACION DEL CODIGO DE ACTIVACIÓN DE LA CUENTA
+
+const activarCodigo = async(req, res) => {
+    try{
+        const { email, code } = req.body
+
+        minusEmail = email.toLowerCase()
+
+        const user = await models.user.findOne({ email: minusEmail })
+        if(!user){
+            return res.status(400).json("El usuario no exíste")
+        }
+
+        if(user.code !== code){
+            return res.status(400).json("El código no es correcto, inténtelo de nuevo")
+        }
+
+        const codeValidate = (date, hours) => {
+            return new Date(new Date(date).setHours(date.getHours() + hours))
+        }
+
+        const HOURS = 1     
+        const updatedAt = new Date(user.updatedAt)
+        const now = new Date()
+        const auxDate = codeValidate(updatedAt, HOURS)
+
+        if(now.getTime() > auxDate.getTime()){
+            return res.status(400).json({ error: "El código ha expirado"})
+        }
+
+        if(user.code === code){
+            user.active = true
+            await user.save()
+        }
+
+        return res.status(200).json({ user })
+
+    } catch(error){
+
+        return res.status(500).json({ error: "No ha sido posible activar el codigo"})
+    }
+    
+}
+
+//REENVIAR EL CODIGO SI HA EXPIRADO
+
+const reactivarCodigo = async (req,res)=> {
+    try{
+
+        const { email } = req.body
+
+        const minusEmail = email.toLowerCase()
+
+        const user = await models.user.findOne({ email: minusEmail})
+        if(!user){
+            return res.status(400).json({error: "El usuario no existe"})
+        }
+
+        const content = `Code: ${user.code}`
+
+        await helpers.mail.send(minusEmail, content, "¡Tu codigo de acceso a SaveFlix!")
+
+        const now = new Date()
+
+        await user.updateOne({updatedAt: now})
+
+        return res.status(200).json({ user })
+
+    }catch(error){
+        return res.status(500).json({ error: "No ha sido posible reenviar el codigo"})
+    }
+}
 
 // INICIO DE SESIÓN DEL USUARIO
 
@@ -66,6 +145,10 @@ const login = async (req, res) => {
         const user = await models.user.findOne({ email })
         if(!user){
             return res.status(400).json({ error: 'El correo electrónico no está registrado'})
+        }
+
+        if(user.active === false){
+            return res.status(400).json({ error: "Active su cuenta para usar SaveFlix"})
         }
 
         const isValid = await helpers.bcrypt.compare(password, user.password)
@@ -93,7 +176,7 @@ const getAll = async (req, res) => {
         return res.status(200).json({users})
 
     }catch(error){
-        return res.status(500).json({ error: 'No se han podido obtener los usuario'})
+        return res.status(500).json({ error: 'No se han podido obtener los usuarios'})
     }
 }
 
@@ -331,6 +414,8 @@ const remove = async (req, res) => {
 
 module.exports = {
     signUp,
+    activarCodigo,
+    reactivarCodigo,
     login,
     getAll,
     getOne,
