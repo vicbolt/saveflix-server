@@ -16,8 +16,11 @@ const create = async (req,res) => {
             return res.status(400).json({error: 'El usuario no existe'})
         }
 
+        const searchTitle = title.replace(/ /g, "").toUpperCase()
+
         const movie = await models.movie.create({
             title,
+            searchTitle: searchTitle,
             director, 
             description, 
             score, 
@@ -89,25 +92,42 @@ const explorar = async (req,res) => {
 }
 
 const likes = async (req,res) => {
-    try{
+        try{
+    
+            const { postId, userId } = req.body
+    
+            const movie = await models.movie.findById(postId)
+            if(!movie){
+                return res.status(400).json({error: 'El post no existe'})
+            }
 
-        const { postId } = req.body
+            const user = await models.user.findById(userId)
+            if (!user){
+                return res.status(400).json({error: 'El usuario no existe'})
+            }
 
-        const movie = await models.movie.findById(postId)
-        if(!movie){
-            return res.status(400).json({error: 'El post no existe'})
+            if(movie.likes.includes(userId)){
+
+                const index = movie.likes.indexOf(userId)
+                
+                movie.likes.splice(index, 1)
+
+                await movie.save()
+                
+                return res.status(200).json({movie})
+                
+            } else {
+
+                movie.likes.push(user)
+                await movie.save()
+            }
+
+            return res.status(200).json({movie})
+    
+        }catch(error){
+            return res.status(500).json({error})
         }
-
-        movie.likes = movie.likes + 1
-
-        await movie.save()
-
-        return res.status(200).json({ movie })
-
-    }catch(error){
-        return res.status(500).json({error})
     }
-}
 
 const views = async (req, res) => {
     try{
@@ -151,6 +171,28 @@ const getOne = async (req, res) => {
 
     }catch(error){
         return res.status(500).json({error: 'No ha sido posible obtener la información de la película'})
+    }
+}
+
+const search = async (req, res) => {
+    try{
+
+        const {title} = req.params
+
+        const movie = await models.movie.findOne({searchTitle: title})
+        if(movie === null){
+            const serial = await models.serial.findOne({searchTitle: title})
+            if(serial === null){
+                return res.status(400).json({ error: "Este título aún no está en la base de datos, intentelo con otro"})
+            }
+            return res.status(200).json(serial._id)
+        }
+
+        return res.status(200).json(movie._id)
+
+
+    }catch(error){
+        return res.status(500).json({error: 'El título no ha sido subido aún, pruebe con otro título'})
     }
 }
 
@@ -215,6 +257,7 @@ module.exports = {
     getAll,
     explorar,
     getOne,
+    search,
     postRecientes,
     update,
     remove,

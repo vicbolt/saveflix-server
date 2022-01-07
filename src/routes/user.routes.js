@@ -41,8 +41,15 @@ router.get('/following/:id', controllers.user.following)
 router.get('/getOne/:id', controllers.user.getOne)
 
 router.put('/saveEmail/:id', controllers.user.saveEmail)
+
+router.post('/activateEmail', controllers.user.activarEmail)
+
+router.post('/reactivateEmail', controllers.user.reactivarEmail)
+
 router.put('/saveUsername/:id', controllers.user.saveUsername)
+
 router.put('/savePassword/:id', controllers.user.savePassword)
+
 router.put('/saveAvatar/:id', uploads.single('avatar'), controllers.user.saveAvatar)
 
 router.post('/follow', controllers.user.follow)

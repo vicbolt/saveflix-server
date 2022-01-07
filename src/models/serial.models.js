@@ -7,6 +7,11 @@ const serialSchema = new Schema({
         required: true,
     },
 
+    searchTitle: {
+        type: String,
+        required: true,
+    },
+
     director: {
         type: String,
         required: true,
@@ -39,10 +44,10 @@ const serialSchema = new Schema({
         required: true,
     },
     
-    likes: {
-        type: Number,
-        default: '0',
-    },
+    likes: [{
+        type: Schema.Types.ObjectId,
+        ref: 'user'
+    }],
 
     views: {
         type: Number,

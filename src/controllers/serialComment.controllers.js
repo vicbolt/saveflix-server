@@ -15,10 +15,17 @@ const create = async (req, res) => {
             return res.status(400).json({ error: 'El post que intenta comentar no existe'})
         }
 
+        const date = new Date()
+
+        const options = { year: 'numeric', month: "long", day: "numeric" }
+
+        const europeDate = date.toLocaleDateString("es-Es", options)
+
         const comment = await models.serialComment.create({
             message,
             user,
-            post
+            post,
+            date: europeDate
         })
 
         return res.status(200).json({ comment })
@@ -60,7 +67,11 @@ const getOne = async (req, res) => {
 
 const remove = async (req, res) => {
     try{
-        return res.json('REMOVE')
+        const {id} = req.params
+
+        const comment = await models.serialComment.findByIdAndDelete(id)
+
+        return res.status(200).json({comment})
 
     } catch (error){
         return res.status(500).json({error: 'No ha sido posible eliminar el comentario'})

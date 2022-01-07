@@ -32,6 +32,8 @@ router.get('/explorar', controllers.movie.explorar)
 
 router.get('/getOne/:id', controllers.movie.getOne)
 
+router.get('/search/:title', controllers.movie.search)
+
 router.get('/postRecientes', controllers.movie.postRecientes)
 
 router.put('/update/:id', controllers.movie.update)

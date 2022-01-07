@@ -48,7 +48,15 @@ const signUp = async (req,res) => {
             code: code
         }
 
-        const content = `Code: ${code}`
+        const content = 
+        
+        `<h1 style="color: #5e9ca0; text-align: center;"><span style="color: #ff0000;">SAVEFLIX</span></h1>
+        <h1 style="color: #5e9ca0; text-align: center;"><span style="color: #000000;">Código de activación:</span></h1>
+        <h1 style="text-align: center;"><span style="color: #ff0000;"><strong>${code}</strong></span></h1>
+        <p style="text-align: center;">Para insertar su código y activar su cuenta pulse <span style="color: #ff0000; background-color: #ffffff;"><a style="color: #ff0000; background-color: #ffffff;" title="Activar Código" href="http://localhost:3000/activateCode" target="_blank">aquí.;</a></span></p>
+        <p style="text-align: center;"><em>El código caduca 3 horas después de recibir este email.</em></p>
+        <p style="text-align: center;"><em>Si su código ha caducado, puede pedirlo de nuevo en el siguiente enlace.</em></p>
+        <p style="text-align: center;"><span style="background-color: #ffffff; color: #ff0000;"><a style="background-color: #ffffff; color: #ff0000;" title="Reenviar código" href="http://localhost:3000/reactivateCode" target="_blank" rel="noopener"><strong>Reenviar codigo</strong></a></span></p>`
 
         await helpers.mail.send(minusEmail, content, "¡Tu codigo de acceso a SaveFlix!")
 
@@ -72,17 +80,22 @@ const activarCodigo = async(req, res) => {
 
         const user = await models.user.findOne({ email: minusEmail })
         if(!user){
-            return res.status(400).json("El usuario no exíste")
+            return res.status(400).json({error: "El usuario no exíste"})
         }
 
+        if(!code){
+            return res.status(400).json({ error: "Debe introducir el código enviado a su correo electrónico"})
+        }
+        
+        
         if(user.code !== code){
-            return res.status(400).json("El código no es correcto, inténtelo de nuevo")
+            return res.status(400).json({ error: "El código no es correcto, inténtelo de nuevo"})
         }
 
         const codeValidate = (date, hours) => {
             return new Date(new Date(date).setHours(date.getHours() + hours))
         }
-
+        
         const HOURS = 1     
         const updatedAt = new Date(user.updatedAt)
         const now = new Date()
@@ -116,6 +129,7 @@ const reactivarCodigo = async (req,res)=> {
         const minusEmail = email.toLowerCase()
 
         const user = await models.user.findOne({ email: minusEmail})
+
         if(!user){
             return res.status(400).json({error: "El usuario no existe"})
         }
@@ -297,8 +311,28 @@ const saveEmail = async (req, res) => {
             const emailExists = await models.user.findOne({email: minusEmail})
             if(emailExists){
                 return res.status(400).json({ error: 'El email ya ha sido registrado anteriormente'})
-            } else{
-                await user.update({email: minusEmail})
+            } else {
+
+                const code = helpers.code.generate(6)
+
+                const content = 
+                
+                    `<h1 style="color: #5e9ca0; text-align: center;"><span style="color: #ff0000;">SAVEFLIX</span></h1>
+                    <h1 style="color: #5e9ca0; text-align: center;"><span style="color: #000000;">Código de activación:</span></h1>
+                    <h1 style="text-align: center;"><span style="color: #ff0000;"><strong>${code}</strong></span></h1>
+                    <p style="text-align: center;">Para insertar su código y activar su cuenta pulse <span style="color: #ff0000; background-color: #ffffff;"><a style="color: #ff0000; background-color: #ffffff;" title="Activar Código" href="http://localhost:3000/activateCode" target="_blank">aquí.;</a></span></p>
+                    <p style="text-align: center;"><em>El código caduca 3 horas después de recibir este email.</em></p>
+                    <p style="text-align: center;"><em>Si su código ha caducado, puede pedirlo de nuevo en el siguiente enlace.</em></p>
+                    <p style="text-align: center;"><span style="background-color: #ffffff; color: #ff0000;"><a style="background-color: #ffffff; color: #ff0000;" title="Reenviar código" href="http://localhost:3000/reactivateCode" target="_blank" rel="noopener"><strong>Reenviar codigo</strong></a></span></p>`
+
+                await helpers.mail.send(minusEmail, content, "¡Tu codigo de acceso a SaveFlix!")
+
+                await user.update({code: code})
+                
+                
+                // await user.update({email: minusEmail, active: false})
+                return res.status(200).json({user})
+ 
             }
         }
 
@@ -308,6 +342,81 @@ const saveEmail = async (req, res) => {
         return res.status(500).json({ error: 'No ha sido posible actualizar los datos del usuario'})
     }
     
+}
+
+const activarEmail = async(req, res) => {
+    try{
+        const { email, code, oldEmail } = req.body
+
+        minusEmail = oldEmail.toLowerCase()
+
+        const user = await models.user.findOne({ email: minusEmail })
+        if(!user){
+            return res.status(400).json({error: "El usuario no exíste"})
+        }
+
+        if(!code){
+            return res.status(400).json({ error: "Debe introducir el código enviado a su correo electrónico"})
+        }
+        
+        
+        if(user.code !== code){
+            return res.status(400).json({ error: "El código no es correcto, inténtelo de nuevo"})
+        }
+
+        const codeValidate = (date, hours) => {
+            return new Date(new Date(date).setHours(date.getHours() + hours))
+        }
+        
+        const HOURS = 1     
+        const updatedAt = new Date(user.updatedAt)
+        const now = new Date()
+        const auxDate = codeValidate(updatedAt, HOURS)
+
+        if(now.getTime() > auxDate.getTime()){
+            return res.status(400).json({ error: "El código ha expirado"})
+        }
+
+        if(user.code === code){
+            user.email = email
+            await user.save()
+        }
+
+        return res.status(200).json({ user })
+
+    } catch(error){
+
+        return res.status(500).json({ error: "No ha sido posible activar el nuevo email"})
+    }
+    
+}
+
+const reactivarEmail = async (req,res)=> {
+    try{
+
+        const { email, oldEmail } = req.body
+
+        const minusEmail = oldEmail.toLowerCase()
+
+        const user = await models.user.findOne({ email: minusEmail})
+
+        if(!user){
+            return res.status(400).json({error: "El usuario no existe"})
+        }
+
+        const content = `Code: ${user.code}`
+
+        await helpers.mail.send(email, content, "¡Tu codigo de acceso a SaveFlix!")
+
+        const now = new Date()
+
+        await user.updateOne({updatedAt: now})
+
+        return res.status(200).json({ user })
+
+    }catch(error){
+        return res.status(500).json({ error: "No ha sido posible reenviar el codigo"})
+    }
 }
 
 const saveUsername = async (req, res) => {
@@ -420,6 +529,8 @@ module.exports = {
     getAll,
     getOne,
     saveEmail,
+    activarEmail,
+    reactivarEmail,
     savePassword,
     saveAvatar,
     saveUsername,

@@ -1,10 +1,10 @@
 const config = {
     mail : {
-        host: 'smtp.ethereal.email',
-        port: 587,
+        service: 'gmail',
+        host: 'smtp.gmail.com',
         auth: {
-            user: 'dorthy.hammes77@ethereal.email',
-            pass: 'QVts1qP9rFynZ2USUW'
+            user: `${process.env.GMAIL_USERNAME}`,
+            pass: `${process.env.GMAIL_PASSWORD}`,
         },
     },
 

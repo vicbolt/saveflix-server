@@ -15,8 +15,11 @@ const create = async (req,res) => {
             return res.status(400).json({error: 'El usuario no existe'})
         }
 
+        const searchTitle = title.replace(/ /g, "").toUpperCase()
+
         const serial = await models.serial.create({
             title,
+            searchTitle: searchTitle,
             director, 
             description, 
             score, 
@@ -118,16 +121,33 @@ const postRecientes = async (req, res) => {
 const likes = async (req,res) =>{
     try{
 
-        const {postId} = req.body
+        const {postId, userId} = req.body
 
         const serial = await models.serial.findById(postId)
         if(!serial){
             return res.status(400).json({error: 'El post no existe'})
         }
 
-        serial.likes = serial.likes + 1
+        const user = await models.user.findById(userId)
+        if (!user){
+            return res.status(400).json({error: 'El usuario no existe'})
+        }
 
-        await serial.save()
+        if(serial.likes.includes(userId)){
+
+            const index = serial.likes.indexOf(userId)
+            
+            serial.likes.splice(index, 1)
+
+            await serial.save()
+            
+            return res.status(200).json({serial})
+            
+        } else {
+
+            serial.likes.push(user)
+            await serial.save()
+        }
 
         return res.status(200).json({serial})
 

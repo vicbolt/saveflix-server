@@ -19,6 +19,11 @@ const commentSchema = new Schema({
         required: true
     },
 
+    date: {
+        type: String,
+        required: true
+    }
+
 },{
     timestamps: true,
     versionKey: false,

@@ -9,7 +9,7 @@ async function send(email, content, subject){
         const transporter = nodemailer.createTransport(config.mail);
 
         await transporter.sendMail({
-            from: "SaveFlix@media.com",
+            from: `${process.env.GMAIL_USERNAME}`,
             to: email,
             subject,
             html: content,
