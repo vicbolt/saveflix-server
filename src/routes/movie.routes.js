@@ -24,7 +24,7 @@ const uploads = multer({
 
 const router = Router();
 
-router.post('/create', uploads.single('image'), controllers.movie.create)
+router.post('/create', controllers.movie.create)
 
 router.get('/getAll/:id', controllers.movie.getAll)
 
