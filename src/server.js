@@ -12,7 +12,7 @@ const server = express();
 server.set('PORT', process.env.PORT ?? 4500);
 
 //MIDDLEWARES
-server.use(express.json({ limit: "50mb" }));
+server.use(express.json({ limit: '10mb' }));
 server.use(express.urlencoded({ extended: false }));
 server.use(morgan('dev'));
 server.use(cors());
@@ -32,8 +32,6 @@ server.use('/api/serialPendiente', routes.serialPendiente)
 server.get("/", (req,res) => {
    return res.json({ msg: "bienvenido"})
 })
-
-
 
 
 //STATIC-PUBLIC FOLDER
