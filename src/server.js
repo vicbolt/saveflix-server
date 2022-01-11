@@ -12,7 +12,7 @@ const server = express();
 server.set('PORT', process.env.PORT ?? 4500);
 
 //MIDDLEWARES
-server.use(express.json());
+server.use(express.json({ limit: "50mb" }));
 server.use(express.urlencoded({ extended: false }));
 server.use(morgan('dev'));
 server.use(cors());
