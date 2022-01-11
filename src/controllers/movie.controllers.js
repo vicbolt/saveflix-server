@@ -46,8 +46,11 @@ const duplicate = async (req,res) => {
             return res.status(400).json({error: 'El usuario no existe'})
         }
 
-        const movie = await models.movie.create({
+        const searchTitleX = title.replace(/ /g, "").toUpperCase()
+
+        const movie = await models.movie.create ({
             title,
+            searchTitle: searchTitleX,
             director, 
             description, 
             score, 
@@ -201,16 +204,19 @@ const update = async (req,res) => {
     try{
 
         const {id} = req.params
-        const { title, director, description, score, image, owner } = req.body;
+        const { title, director, description, score, image, userId } = req.body;
 
         const movie = await models.movie.findById(id)
 
+        const searchTitleX = title.replace(/ /g, "").toUpperCase()
+
         movie.title = title
+        movie.searchTitle = searchTitleX
         movie.director = director
         movie.description = description
         movie.score = score
         movie.image = image
-        movie.owner = owner
+        movie.userId = userId
 
         await movie.save()
 

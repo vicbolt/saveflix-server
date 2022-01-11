@@ -45,8 +45,11 @@ const duplicate = async (req,res) => {
             return res.status(400).json({error: 'El usuario no existe'})
         }
 
+        const searchTitleX = title.replace(/ /g, "").toUpperCase()
+
         const serial = await models.serial.create({
             title,
+            searchTitle: searchTitleX,
             director, 
             description, 
             score, 
@@ -176,16 +179,19 @@ const update = async (req,res) => {
     try{
 
         const {id} = req.params
-        const { title, director, description, score, image, owner } = req.body;
+        const { title, director, description, score, image, userId } = req.body;
 
         const serial = await models.serial.findById(id)
 
+        const searchTitleX = title.replace(/ /g, "").toUpperCase()
+
         serial.title = title
+        serial.searchTitle = searchTitleX
         serial.director = director
         serial.description = description
         serial.score = score
         serial.image = image
-        serial.owner = owner
+        serial.userId = userId
 
         await serial.save()
 

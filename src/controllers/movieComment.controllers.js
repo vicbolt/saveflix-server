@@ -40,7 +40,7 @@ const getComments = async (req, res) => {
     try{
         const { id } = req.params
 
-        const comments = await models.movieComment.find({post: id}).populate("user").sort({ createdAt: 'desc'})
+        const comments = await models.movieComment.find({post: id}).populate("user").populate("post").sort({ createdAt: 'desc'})
 
         return res.status(200).json({comments})
 
