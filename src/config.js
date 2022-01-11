@@ -15,7 +15,7 @@ const config = {
     jwt: {
         secret: '01001000100001'
     },
-    hostname: "https://github.com/vicbolt/saveflix-client",
+    hostname: "https://saveflix-server.herokuapp.com/",
     imageFolder: './src/public',
 };
 
