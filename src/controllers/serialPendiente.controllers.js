@@ -4,11 +4,11 @@ const config = require('../config')
 
 const create = async (req,res) => {
     try{
-        const { title, director, userId } = req.body;
+        const { title, director, userId, image } = req.body;
 
-        const hostname = config.hostname
-        const file = req.file
-        const filename = hostname + file.filename
+        // const hostname = config.hostname
+        // const file = req.file
+        // const filename = hostname + file.filename
 
         const user = await models.user.findById(userId)
         if(!user){
@@ -18,7 +18,7 @@ const create = async (req,res) => {
         const serial = await models.serialPendiente.create({
             title,
             director,
-            image: filename,
+            image,
             userId: user,
             post: "serial"
         })

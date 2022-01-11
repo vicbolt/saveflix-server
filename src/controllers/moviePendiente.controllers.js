@@ -4,11 +4,7 @@ const config = require('../config')
 
 const create = async (req,res) => {
     try{
-        const { title, director, userId } = req.body;
-
-        const hostname = config.hostname
-        const file = req.file
-        const filename = hostname + file.filename
+        const { title, director, image, userId } = req.body;
 
         const user = await models.user.findById(userId)
         if(!user){
@@ -18,7 +14,7 @@ const create = async (req,res) => {
         const movie = await models.moviePendiente.create({
             title,
             director,
-            image: filename,
+            image,
             userId: user,
             post: "movie"
         })

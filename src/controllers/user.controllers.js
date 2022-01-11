@@ -9,7 +9,7 @@ const { model } = require('mongoose');
 
 const signUp = async (req,res) => {
     try{
-        const { email, username, password, password2 } = req.body
+        const { email, username, password, password2, avatar } = req.body
 
         if(!email || !username || !password || !password2){
             return res.status(400).json({ error: 'Se deben de rellenar todos los campos'})
@@ -35,13 +35,13 @@ const signUp = async (req,res) => {
 
         const minusEmail = email.toLowerCase()
 
-        const file = req.file
-        const hostname = config.hostname
+        // const file = req.file
+        // const hostname = config.hostname
 
         const code = helpers.code.generate(6)
         
         const user = { 
-            avatar: hostname + file.filename,
+            avatar,
             email: minusEmail,
             username: mayusUsername,
             password: hash,
@@ -485,7 +485,7 @@ const savePassword = async (req, res) => {
 const saveAvatar = async (req, res) => {
     try{
         const { id } = req.params
-        const {avatar} = req.file
+        const { avatar } = req.body
 
         const user = await models.user.findById(id)
 
@@ -493,7 +493,7 @@ const saveAvatar = async (req, res) => {
             return res.status(400).json('El avatar está vacío, elija uno para continuar')
         }
 
-        const newAvatar = hostname + file.filename
+        const newAvatar = avatar
 
         await user.update({avatar: newAvatar })
 

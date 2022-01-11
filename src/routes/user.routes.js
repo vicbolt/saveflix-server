@@ -3,30 +3,30 @@ const router = Router();
 
 const controllers = require('../controllers')
 
-const multer = require('multer')
+// const multer = require('multer')
 
-const config = require('../config')
+// const config = require('../config')
 
-const storage = multer.diskStorage({
-    destination: function(req,file,cb){
-        cb(null, config.imageFolder)
-    },
-    filename: function(req, file, cb){
-        cb(null, Date.now() + '.jpg')
-    }
-})
+// const storage = multer.diskStorage({
+//     destination: function(req,file,cb){
+//         cb(null, config.imageFolder)
+//     },
+//     filename: function(req, file, cb){
+//         cb(null, Date.now() + '.jpg')
+//     }
+// })
 
-const uploads = multer({
-    storage: storage,
-    limits: {
-        // fileSize: 20000000000,
-    }
-})
+// const uploads = multer({
+//     storage: storage,
+//     limits: {
+//         // fileSize: 20000000000,
+//     }
+// })
 
 
 router.post('/login', controllers.user.login)
 
-router.post('/signup', uploads.single('avatar'), controllers.user.signUp)
+router.post('/signup', controllers.user.signUp)
 
 router.post('/activateCode', controllers.user.activarCodigo)
 
@@ -50,7 +50,7 @@ router.put('/saveUsername/:id', controllers.user.saveUsername)
 
 router.put('/savePassword/:id', controllers.user.savePassword)
 
-router.put('/saveAvatar/:id', uploads.single('avatar'), controllers.user.saveAvatar)
+router.put('/saveAvatar/:id', controllers.user.saveAvatar)
 
 router.post('/follow', controllers.user.follow)
 
