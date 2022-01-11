@@ -7,8 +7,6 @@ const create = async (req,res) => {
     try{
         const { title, director, description, score, userId } = req.body;
 
-
-
         const user = await models.user.findById(userId)
         if(!user){
             return res.status(400).json({error: 'El usuario no existe'})
@@ -26,6 +24,31 @@ const create = async (req,res) => {
             userId: user,
             post: "movie"
         })
+
+        if(!title){
+            console.log("NO EXISTE title")
+        }
+        if(!searchTitle){
+            console.log("NO EXISTE searchTitle")
+        }
+        if(!director){
+            console.log("NO EXISTE director")
+        }
+        if(!description){
+            console.log("NO EXISTE description")
+        }
+        if(!score){
+            console.log("NO EXISTE score")
+        }
+        if(!image){
+            console.log("NO EXISTE image")
+        }
+        if(!userId){
+            console.log("NO EXISTE userId")
+        }
+        if(!post){
+            console.log("NO EXISTE post")
+        }
 
         return res.status(200).json({ movie })
 
