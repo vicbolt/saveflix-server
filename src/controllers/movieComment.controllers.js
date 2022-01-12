@@ -26,6 +26,7 @@ const create = async (req, res) => {
             message,
             user,
             post,
+            postId,
             date: europeDate
         })
 

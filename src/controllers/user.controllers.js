@@ -3,6 +3,7 @@ const helpers = require('../helpers')
 const jwt = require('jsonwebtoken');
 const config = require('../config');
 const { model } = require('mongoose');
+const movieModels = require('../models/movie.models');
 
 
 // REGISTRO DEL USUARIO
@@ -156,7 +157,9 @@ const login = async (req, res) => {
 
         const { email, password } = req.body
 
-        const user = await models.user.findOne({ email })
+        const minusEmail = email.toLowerCase()
+
+        const user = await models.user.findOne({ email: minusEmail })
         if(!user){
             return res.status(400).json({ error: 'El correo electrónico no está registrado'})
         }
@@ -231,8 +234,6 @@ const follow = async (req,res) => {
             const following = myUserId.following
 
             const index = following.indexOf(userToFollowId._id)
-
-            console.log(index)
 
             const updated = following.splice(index, 1)
 
@@ -512,14 +513,54 @@ const remove = async (req, res) => {
 
         const {id} = req.params
 
-        const user = await models.user.findByIdAndRemove(id)
+        const user = await models.user.findById(id)
+        if(!user){
+            return res.status(205).json({ error: "El usuario no existe "})
+        }
 
-        return res.status(200).json({user})
+        //BORRADO DE TODOS LOS COMENTARIOS DE PELICULAS QUE HA SUBIDO DEL USER QUE VA A SER ELIMINADO
+        const movies = await models.movie.find({ userId: user._id })
+
+        for(var i = 0; i < movies.length ; i++){
+           await models.movieComment.remove({ postId: movies[i]._id })
+        }
+
+        //BORRADO DE COMENTARIOS QUE HA HECHO EL USUARIO QUE VA A SER ELIMINADO
+        await models.movieComment.remove({ user: user._id})
+
+        //BORRADO DE LAS PELICULAS QUE HA SUBIDO EL USUARIO ELIMINADO
+        await models.movie.remove({ userId: user._id})
+
+        //BORRADO DE LAS PELICULAS PENDIENTES QUE HA SUBIDO EL ELIMINADO
+        await models.moviePendiente.remove({ userId: user._id})
+
+
+        //BORRADO DE TODOS LOS COMEMTARIOS DE SERIES QUE HA SUBIDO EL USER QUE VA A SER ELIMINADO
+        const serial = await models.serial.find({ userId: user._id })
+
+        for(var i = 0; i < serial.length ; i++){
+           await models.serialComment.remove({ postId: serial[i]._id })
+        }
+        
+        //BORRADO DE LOS COMENTARIOS QUE HA HECHO EL USER ELIMINADO
+        await models.serialComment.remove({ user: user._id})
+
+        //BORRADO DE LAS SERIES QUE HA SUBIDO EL ELIMINADO
+        await models.serial.remove({ userId: user._id})
+
+        //BORRADO DE LAS SERIES PENDIENTES QUE HA SUBIDO EL ELIMINADO
+        await models.serialPendiente.remove({ userId: user._id})
+        
+        //BORRADO DE LOS DATOS DE USUARIO DEL ELIMINADO
+        await models.user.findByIdAndRemove(id)
+
+        return res.status(200).json({msg: "Se han borrado todos los datos del usuario"})
 
     }catch (error){
         return res.status(500).json({error: 'No ha sido posible eliminar el usuario'})
     }
 }
+
 
 module.exports = {
     signUp,
