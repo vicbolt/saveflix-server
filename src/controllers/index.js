@@ -13,5 +13,5 @@ module.exports = {
     movieComment,
     serialComment,
     moviePendiente,
-    serialPendiente
+    serialPendiente,
 }

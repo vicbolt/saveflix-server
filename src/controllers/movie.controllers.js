@@ -1,7 +1,5 @@
 const models = require('../models')
 
-const config = require('../config')
-
 
 const create = async (req,res) => {
     try{

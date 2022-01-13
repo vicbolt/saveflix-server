@@ -36,9 +36,6 @@ const signUp = async (req,res) => {
 
         const minusEmail = email.toLowerCase()
 
-        // const file = req.file
-        // const hostname = config.hostname
-
         const code = helpers.code.generate(6)
         
         const user = { 
