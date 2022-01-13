@@ -212,6 +212,32 @@ const getOne = async (req, res) => {
     }
 }
 
+const search = async (req, res) => {
+    try{
+
+        const { username } = req.params
+
+        const {userId} = req.body
+
+        const mayusUsername = username.toUpperCase()
+
+        const user = await models.user.findOne({ username : mayusUsername })
+        if(!user){
+            return res.status(200).json({error: "No hay ningún usuario registrado con este nombre"})
+        }
+
+        if(mayusUsername === userId){
+            return res.status(200). json(user.username)
+        }
+
+        return res.status(200).json(user._id)
+
+
+    }catch(error){
+        return res.status(500).json({error: 'El título no ha sido subido aún, pruebe con otro título'})
+    }
+}
+
 //SEGUIR A UN AMIGO
 
 const follow = async (req,res) => {
@@ -569,6 +595,7 @@ module.exports = {
     login,
     getAll,
     getOne,
+    search,
     saveEmail,
     activarEmail,
     reactivarEmail,

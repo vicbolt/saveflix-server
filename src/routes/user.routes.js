@@ -34,6 +34,8 @@ router.post('/reactivateCode', controllers.user.reactivarCodigo)
 
 router.get('/getAll', controllers.user.getAll)
 
+router.get('/search/:username', controllers.user.search)
+
 router.get('/followers/:id', controllers.user.followers)
 
 router.get('/following/:id', controllers.user.following)

@@ -12,6 +12,10 @@ const create = async (req,res) => {
             return res.status(400).json({error: 'El usuario no existe'})
         }
 
+        if(!title || !director || !description || !score || !image){
+            return res.status(400).json({error: "Todos los campos son obligatorios"})
+        }
+
         const searchTitle = title.replace(/ /g, "").toUpperCase()
 
         const movie = await models.movie.create({
