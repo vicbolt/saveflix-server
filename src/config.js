@@ -15,7 +15,7 @@ const config = {
     jwt: {
         secret: '01001000100001'
     },
-    hostname: "http://localhost:4500/",
+    hostname: "https://saveflix-client.herokuapp.com/",
     imageFolder: './src/public',
 };
 
