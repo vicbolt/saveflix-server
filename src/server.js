@@ -35,7 +35,7 @@ server.use('/api/serialPendiente', routes.serialPendiente)
 
 
 server.get("/", (req,res) => {
-   return console.log("bienvenido")
+   return res.send("bienvenido")
 })
 
 
