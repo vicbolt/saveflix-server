@@ -18,18 +18,6 @@ server.use(morgan('dev'));
 server.use(cors());
 
 
-
-// server.use((req, res, next) => {
-//    res.setHeader("Access-Control-Allow-Origin", "https://saveflix-client.herokuapp.com");
-//    res.header(
-//      "Access-Control-Allow-Headers",
-//      "Origin, X-Requested-With, Content-Type, Accept"
-//    );
-//    next();
-//  });
-
-
-
 //ROUTES
 
 server.get("/api/chat", (req,res) => {
