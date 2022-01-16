@@ -15,7 +15,18 @@ server.set('PORT', process.env.PORT && 4500);
 server.use(express.json({ limit: '10mb' }));
 server.use(express.urlencoded({ extended: false }));
 server.use(morgan('dev'));
-server.use(cors());
+
+
+server.use((req, res, next) => {
+   res.setHeader("Access-Control-Allow-Origin", "https://saveflix-client.herokuapp.com");
+   res.header(
+     "Access-Control-Allow-Headers",
+     "Origin, X-Requested-With, Content-Type, Accept"
+   );
+   next();
+ });
+
+ server.use(cors());
 
 
 //ROUTES
