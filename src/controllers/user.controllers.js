@@ -224,7 +224,7 @@ const search = async (req, res) => {
         }
 
         if(mayusUsername === userId){
-            return res.status(200). json(user.username)
+            return res.status(200).json(user.username)
         }
 
         return res.status(200).json(user._id)
