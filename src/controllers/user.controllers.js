@@ -173,7 +173,6 @@ const login = async (req, res) => {
         const token = await jwt.sign({user}, config.jwt.secret)
 
         return res.status(200).json({token, userId: user._id})
-        
 
     }catch(error){
 
