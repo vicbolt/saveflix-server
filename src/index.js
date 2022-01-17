@@ -1,23 +1,38 @@
-const express = require('express');
+require("dotenv").config()
 
-const app = express();
+require('./database')
 
-const http = require('http');
+const server = require('./server');
 
-const server = http.createServer(app);
+const app = server.listen(3500, () =>{
+    console.log("CHAT is running on port 3500")
+})
 
-const { Server } = require("socket.io");
-const io = new Server(server);
+const socketIO = require("socket.io")
+const io = socketIO(app)
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+module.exports = io
+
+
+// io.on("connection", (socket) => {
+//     console.log("socket", socket.id) //De esta forma imprimimos el id de conexion cuando alguien se conecta
+
+//     socket.on('message', (msg)=>{  //recibo un msg
+//         io.emit('message', msg); // transmito a todo el mundo el msg
+//     })
+
+//     socket.on("writing", (msg) => {
+//         socket.broadcast.emit("writing", msg)
+//     })
+
+//     socket.on("disconnect", () => {
+//         console.log("socket disconnected") //envia un console.log de la desconexión del socket
+//     })
+// })
+
+
+server.listen(server.get('PORT'), () =>{
+    console.log('Server is running on port ', server.get('PORT'))
 });
 
-io.on('connection', (socket) => {
-  console.log('nuevo usuario conectado');
-});
-
-server.listen(process.env.PORT || 4500, () => {
-    console.log('Server is running on port: 4500');
-  });
-
+module.exports = server
