@@ -2,16 +2,20 @@ require("dotenv").config()
 
 require('./database')
 
-const server = require('./server');
+const express = require('express');
+const app = express();
+const http = require('http');
+const server = http.createServer(app);
 
-// const app = server.listen(3500, () =>{
-//     console.log("CHAT is running on port 3500")
-// })
+app.get('/', (req, res) => {
+  res.send('<h1>Hello world</h1>');
+});
 
-// const socketIO = require("socket.io")
-// const io = socketIO(app)
+server.listen(process.env.PORT || 4500, () => {
+  console.log('Server is running on port: 4500');
+});
 
-// module.exports = io
+module.exports = server
 
 
 // io.on("connection", (socket) => {
@@ -30,9 +34,6 @@ const server = require('./server');
 //     })
 // })
 
-
-server.listen(server.get('PORT'), () =>{
-    console.log('Server is running on port ', server.get('PORT'))
-});
-
-module.exports = server
+// server.listen(server.get('PORT'), () =>{
+//     console.log('Server is running on port ', server.get('PORT'))
+// });
