@@ -525,7 +525,6 @@ const saveAvatar = async (req, res) => {
     } catch(error){
         return res.status(500).json({ error: 'No ha sido posible actualizar los datos del usuario'})
     }
-    
 }
 
 //BORRAR UN USUARIO
