@@ -511,6 +511,9 @@ const saveAvatar = async (req, res) => {
         const { avatar } = req.body
 
         const user = await models.user.findById(id)
+        if(!user){
+            return res.status(400).json({ error: "El usuario no existe"})
+        }
 
         if(!avatar){
             return res.status(400).json('El avatar está vacío, elija uno para continuar')
@@ -518,7 +521,7 @@ const saveAvatar = async (req, res) => {
 
         const newAvatar = avatar
 
-        await user.update({avatar: newAvatar })
+        await user.update({ avatar: newAvatar })
 
         return res.status(200).json({user})
 
