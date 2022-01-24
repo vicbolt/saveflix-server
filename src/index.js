@@ -18,18 +18,32 @@ require('./database')
 
 //hasta aqui
 
-const express = require ("express")
-const app = express()
-const server = require("http").Server(app)
-io = require("socket.io")(server)
+const server = require("./server")
+const app = require('express')();
+const http = require('http').createServer(app);
 
-server.listen(4500, function() {
-    console.log("Server is running on port 4500")
-})
+const io = require('socket.io')(http, {
+    cors: {
+      origins: ['http://localhost:3000']
+    }
+  });
 
-io.on("connection", (socket) => {
-    console.log("Un cliente se ha conectado", socket.id)
-})
+app.get('/', (req, res) => {
+  res.send('<h1>Hey Socket.io</h1>');
+});
+
+io.on('connection', (socket) => {
+    console.log('A user connected');
+
+    socket.on('disconnect', () => {
+      console.log('user disconnected');
+    });
+  });
+
+  http.listen(server.get("PORT"), () => {
+    console.log('listeninghttp on: ', server.get("PORT"));
+  });
+
 
 // io.on("connection", (socket) => {
 //     console.log("socket", socket.id) //De esta forma imprimimos el id de conexion cuando alguien se conecta

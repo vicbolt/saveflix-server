@@ -18,13 +18,6 @@ server.use(morgan('dev'));
 server.use(cors());
 
 
-//ROUTES
-
-server.get("/api/chat", (req,res) => {
-   return res.send("HELLO WORLD")
-})
-
-server.use('/api/chat', routes.chat)
 server.use('/api/user', routes.user)
 server.use('/api/movie', routes.movie)
 server.use('/api/serial', routes.serial)
@@ -32,6 +25,7 @@ server.use('/api/movieComment', routes.movieComment)
 server.use('/api/serialComment', routes.serialComment)
 server.use('/api/moviePendiente', routes.moviePendiente)
 server.use('/api/serialPendiente', routes.serialPendiente)
+server.use('/api/msg', routes.msg)
 
 
 server.get("/", (req,res) => {

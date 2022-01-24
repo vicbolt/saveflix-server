@@ -3,27 +3,6 @@ const router = Router();
 
 const controllers = require('../controllers')
 
-// const multer = require('multer')
-
-// const config = require('../config')
-
-// const storage = multer.diskStorage({
-//     destination: function(req,file,cb){
-//         cb(null, config.imageFolder)
-//     },
-//     filename: function(req, file, cb){
-//         cb(null, Date.now() + '.jpg')
-//     }
-// })
-
-// const uploads = multer({
-//     storage: storage,
-//     limits: {
-//         // fileSize: 20000000000,
-//     }
-// })
-
-
 router.post('/login', controllers.user.login)
 
 router.post('/signup', controllers.user.signUp)
