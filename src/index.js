@@ -41,7 +41,7 @@ io.on('connection', (socket) => {
   });
 
   http.listen(server.get("PORT"), () => {
-    console.log('listeninghttp on: ', server.get("PORT"));
+    console.log('listening on: ', server.get("PORT"));
   });
 
 
