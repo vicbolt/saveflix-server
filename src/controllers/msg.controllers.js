@@ -3,7 +3,7 @@ const models = require('../models')
 
 const createMsg = async (req,res) => {
     try{
-        const { userOne, userTwo, content} = req.body;
+        const { userOne, userTwo, content } = req.body;
 
         const user1 = await models.user.findById(userOne)
         if(!user1){
