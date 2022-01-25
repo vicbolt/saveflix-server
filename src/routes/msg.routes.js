@@ -6,6 +6,6 @@ const router = Router();
 
 router.post('/create', controllers.msg.createMsg)
 
-router.get('/getAll', controllers.msg.getMsg)
+router.get('/getAll/:userOne/:userTwo', controllers.msg.getMsg)
 
 module.exports = router
