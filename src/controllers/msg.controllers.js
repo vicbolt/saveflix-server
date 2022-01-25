@@ -45,7 +45,7 @@ const getMsg = async (req,res) =>{
 
         const mensajes = mensajesA.sort()
 
-        return res.status(200).json(mensajes)
+        return res.status(200).json({mensajes})
 
     }catch(error){
         return res.status(500).json({error: "No ha sido posible obtener los mensajes"})
