@@ -3,14 +3,28 @@ require("dotenv").config()
 require('./database')
 
 
+const server = require("./server")
+const app = require('express')();
+const http = require('http').createServer(app);
 
-const server = require('./server');
+const io = require('socket.io')(http, {
+    cors: {
+      origins: ['http://localhost:3000']
+    }
+  });
 
-const app = server.listen(4500, () =>{
-    console.log("server is running on port 4500")
-})
+app.get('/', (req, res) => {
+  res.send('<h1>Hey Socket.io</h1>');
+});
 
-const socketIO = require("socket.io")
-const io = socketIO(app)
+io.on('connection', (socket) => {
+    console.log('A user connected');
 
-module.exports = io
+    socket.on('disconnect', () => {
+      console.log('user disconnected');
+    });
+  });
+
+  http.listen(server.get("PORT"), () => {
+    console.log('listeninghttp on: ', server.get("PORT"));
+  });
