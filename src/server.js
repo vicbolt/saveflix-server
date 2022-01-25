@@ -15,7 +15,7 @@ server.set('PORT', process.env.PORT || 4500);
 server.use(express.json({ limit: '10mb' }));
 server.use(express.urlencoded({ extended: false }));
 server.use(morgan('dev'));
-// server.use(cors());
+server.use(cors());
 
 
 server.use('/api/user', routes.user)
