@@ -37,17 +37,9 @@ const getMsg = async (req,res) =>{
 
         const { userOne, userTwo } = req.params;
         
-        const mensajeE1 = await models.msg.find({ userOne: userOne, userTwo: userTwo})
-        const mensajeE2 = await models.msg.find({ userOne: userTwo, userTwo: userOne})
+        const mensajes = await models.msg.find({ userOne: userOne || userTwo , userTwo: userTwo || userOne})
 
-        if(mensajeE1){
-            const mensajes = mensajeE1
-            return res.status(200).json({mensajes})
-            
-        } else if (mensajeE2){
-            const mensajes = mensajeE2
-            return res.status(200).json({mensajes})
-        }
+        return res.status(200).json({mensajes})
 
     }catch(error){
         return res.status(500).json({error: "No ha sido posible obtener los mensajes"})
