@@ -37,9 +37,9 @@ const getMsg = async (req,res) =>{
 
         const { userOne, userTwo } = req.params;
         
-        const mensajes1 = await models.msg.find({userOne : userOne, userTwo : userTwo})
+        const mensajes1 = await models.msg.find({userOne : userOne, userTwo : userTwo}).populate("userOne").populate("userTwo")
 
-        const mensajes2 = await models.msg.find({userOne : userTwo , userTwo : userOne})
+        const mensajes2 = await models.msg.find({userOne : userTwo , userTwo : userOne}).populate("userOne").populate("userTwo")
 
         const mensajesA = mensajes1.concat(mensajes2)
 
