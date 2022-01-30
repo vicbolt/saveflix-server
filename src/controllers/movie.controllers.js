@@ -71,7 +71,7 @@ const getAll = async (req,res) => {
 
         const movies = await models.movie.find({userId: id}).sort({ createdAt: "desc"})
 
-        const ranking = await models.movie.find({userId: id}).sort({ score: 'desc'}).limit(10)
+        const ranking = await models.movie.find({userId: id}).sort({ score: 'desc'}).limit(15)
 
         return res.status(200).json({ movies, ranking })
 

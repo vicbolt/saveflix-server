@@ -73,7 +73,7 @@ const getAll = async (req,res) => {
 
         const serials = await models.serial.find({userId: id}).sort({ createdAt: 'desc'})
 
-        const serialRanking = await models.serial.find({userId: id}).sort({ score: 'desc'}).limit(10)
+        const serialRanking = await models.serial.find({userId: id}).sort({ score: 'desc'}).limit(15)
 
         return res.status(200).json({ serials, serialRanking })
 
