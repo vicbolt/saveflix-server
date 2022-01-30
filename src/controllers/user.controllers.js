@@ -518,7 +518,6 @@ const saveAvatar = async (req, res) => {
         if(!avatar){
             return res.status(400).json('El avatar está vacío, elija uno para continuar')
         }
-
         const newAvatar = avatar
 
         await user.update({ avatar: newAvatar })
