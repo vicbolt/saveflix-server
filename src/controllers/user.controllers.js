@@ -542,6 +542,22 @@ const remove = async (req, res) => {
             return res.status(205).json({ error: "El usuario no existe "})
         }
 
+        //BORRADO DE SEGUIMIENTOS
+
+        const seguidores = await models.user.find({following: user._id})
+        
+        for(let i = 0; seguidores.length > i; i++){
+
+            for(let index = 0; seguidores[i].following.length > index; index ++){
+
+                if(JSON.stringify(user._id) === JSON.stringify(seguidores[i].following[index])){
+                    console.log("hola")
+                    seguidores[i].following.splice(index, 1)
+                    await seguidores[i].save()
+                }
+            }
+        }
+
         //BORRADO DE TODOS LOS COMENTARIOS DE PELICULAS QUE HA SUBIDO DEL USER QUE VA A SER ELIMINADO
         const movies = await models.movie.find({ userId: user._id })
 
@@ -577,6 +593,8 @@ const remove = async (req, res) => {
         
         //BORRADO DE LOS DATOS DE USUARIO DEL ELIMINADO
         await models.user.findByIdAndRemove(id)
+
+    
 
         return res.status(200).json({msg: "Se han borrado todos los datos del usuario"})
 

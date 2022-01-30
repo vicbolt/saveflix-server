@@ -5,7 +5,6 @@ const movieComment = require('./movieComment.controllers')
 const serialComment = require('./serialComment.controllers')
 const moviePendiente = require('./moviePendiente.controllers')
 const serialPendiente = require('./serialPendiente.controllers')
-const msg = require('./msg.controllers')
 
 module.exports = {
     movie,
@@ -15,5 +14,4 @@ module.exports = {
     serialComment,
     moviePendiente,
     serialPendiente,
-    msg
 }

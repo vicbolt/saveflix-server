@@ -5,7 +5,6 @@ const movieComment = require('./movieComment.routes')
 const serialComment = require('./serialComment.routes')
 const moviePendiente = require('./moviePendiente.routes')
 const serialPendiente = require('./serialPendiente.routes')
-const msg = require('./msg.routes')
 
 module.exports = {
     movie,
@@ -15,5 +14,4 @@ module.exports = {
     serialComment,
     moviePendiente,
     serialPendiente,
-    msg
 }
