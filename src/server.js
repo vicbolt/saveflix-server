@@ -25,7 +25,6 @@ server.use('/api/movieComment', routes.movieComment)
 server.use('/api/serialComment', routes.serialComment)
 server.use('/api/moviePendiente', routes.moviePendiente)
 server.use('/api/serialPendiente', routes.serialPendiente)
-server.use('/api/msg', routes.msg)
 
 
 server.get("/", (req,res) => {
